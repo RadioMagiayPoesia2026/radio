@@ -440,6 +440,7 @@
                 <option value="Viernes">Viernes</option>
                 <option value="Sábado">Sábado</option>
                 <option value="Domingo">Domingo</option>
+                <option value="Comodin">Comodin</option>
             </select>
             <input type="text" id="edit-dj" placeholder="Nombre del DJ">
             <input type="text" id="edit-time" placeholder="Horario (ej: 20:00 a 22:00 hrs)">
@@ -479,7 +480,7 @@
                 groupedByDay[item.day_name].push(item);
             });
 
-            const weekDays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+            const weekDays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Comodin"];
 
             const renderDays = () => {
                 let htmlContent = '';
@@ -497,7 +498,7 @@
                                         <div class="dj-time">${item.time_slot}</div>
                                         ${isAdmin ? `
                                             <div class="card-actions">
-                                                <button class="btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openEditModal(${item.id}, '${item.day_name}', '${item.dj_name}', '${item.time_slot}', '${item.image_url}', ${item.order_num})">Editar</button>
+                                                <button class="btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openEditModal(${item.id}, '${item.day_name}', '${item.dj_name}', '${item.time_slot}', '${item.image_url}','${item.ord_num}', ${item.comodin_name})">Editar</button>
                                                 <button class="btn btn-danger" style="padding: 2px 6px; font-size: 0.65rem;" onclick="deleteDJ(${item.id})">Eliminar</button>
                                             </div>
                                         ` : ''}
