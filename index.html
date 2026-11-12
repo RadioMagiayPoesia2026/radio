@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Magia y Poesía</title>
+    <title>Radio Magia y Poesía - En Vivo</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -20,14 +20,14 @@
                     },
                     fontFamily: {
                         serif: ['Playfair Display', 'serif'],
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['Be Vietnam Pro', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display & Be Vietnam Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -36,10 +36,29 @@
             100% { transform: rotate(360deg); }
         }
         .animate-spin-slow {
-            animation: spin-slow 12s linear infinite;
+            animation: spin-slow 14s linear infinite;
         }
         .paused {
             animation-play-state: paused;
+        }
+        /* Equalizer Bars Animation */
+        @keyframes eq-bar {
+            0%, 100% { height: 6px; }
+            50% { height: 24px; }
+        }
+        .eq-bar {
+            width: 4px;
+            border-radius: 9999px;
+            background: linear-gradient(to top, #ff007f, #f59e0b);
+            animation: eq-bar 0.8s ease-in-out infinite;
+        }
+        .eq-paused .eq-bar {
+            animation-play-state: paused;
+            height: 6px !important;
+        }
+        /* Smooth Cover Transition */
+        #album-cover, #player-bg-blur {
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
         }
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -60,15 +79,15 @@
 <body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col selection:bg-accentPink selection:text-white">
 
     <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-purple-900/40">
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/85 border-b border-purple-900/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('inicio')">
-                <div class="w-12 h-12 rounded-full border-2 border-accentGold overflow-hidden shadow-lg shadow-accentPink/20 flex items-center justify-center bg-purple-950">
-                    <img src="https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png" alt="Logo" class="w-full h-full object-cover">
+                <div class="w-12 h-12 rounded-full border-2 border-accentGold overflow-hidden shadow-lg shadow-accentPink/25 flex items-center justify-center bg-purple-950">
+                    <img src="https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png" alt="Logo Radio Magia y Poesía" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h1 class="font-serif text-xl sm:text-2xl font-bold bg-gradient-to-r from-accentGold via-pink-400 to-accentPink bg-clip-text text-transparent">Radio Magia y Poesía</h1>
-                    <p class="text-xs text-purple-300 tracking-wider">VERSOS, MÚSICA Y ALMA</p>
+                    <p class="text-[11px] text-purple-300 tracking-widest uppercase">Versos, Música y Alma</p>
                 </div>
             </div>
 
@@ -78,7 +97,7 @@
                     <i class="fa-solid fa-radio mr-2"></i>Inicio
                 </button>
                 <button onclick="switchTab('actualidad')" id="btn-tab-actualidad" class="tab-btn px-4 py-2 rounded-full text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-purple-950/60">
-                    <i class="fa-solid fa-newspaper mr-2"></i>Noticias Chile
+                    <i class="fa-solid fa-newspaper mr-2"></i>Noticias Nacionales
                 </button>
                 <button onclick="switchTab('musica')" id="btn-tab-musica" class="tab-btn px-4 py-2 rounded-full text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-purple-950/60">
                     <i class="fa-solid fa-music mr-2"></i>Música
@@ -93,7 +112,7 @@
 
             <!-- Mobile Menu Button -->
             <div class="md:hidden flex items-center">
-                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2 rounded-lg text-purple-300 hover:text-white hover:bg-purple-900/50">
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-3 rounded-xl text-purple-300 hover:text-white hover:bg-purple-900/50" aria-label="Menú">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
@@ -101,11 +120,11 @@
 
         <!-- Mobile Dropdown Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-purple-900/50 px-4 pt-2 pb-4 space-y-2">
-            <button onclick="switchTab('inicio'); toggleMobileMenu();" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-900/40 text-accentPink"><i class="fa-solid fa-radio mr-2"></i>Inicio</button>
-            <button onclick="switchTab('actualidad'); toggleMobileMenu();" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-newspaper mr-2"></i>Noticias Chile</button>
-            <button onclick="switchTab('musica'); toggleMobileMenu();" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-music mr-2"></i>Música</button>
-            <button onclick="switchTab('tiempo'); toggleMobileMenu();" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-cloud-sun mr-2"></i>El Tiempo</button>
-            <button onclick="switchTab('horoscopo'); toggleMobileMenu();" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-moon mr-2"></i>Horóscopo</button>
+            <button onclick="switchTab('inicio'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-purple-900/40 text-accentPink"><i class="fa-solid fa-radio mr-2"></i>Inicio</button>
+            <button onclick="switchTab('actualidad'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-newspaper mr-2"></i>Noticias Nacionales</button>
+            <button onclick="switchTab('musica'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-music mr-2"></i>Música</button>
+            <button onclick="switchTab('tiempo'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-cloud-sun mr-2"></i>El Tiempo</button>
+            <button onclick="switchTab('horoscopo'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-purple-900/40 text-gray-300"><i class="fa-solid fa-moon mr-2"></i>Horóscopo</button>
         </div>
     </header>
 
@@ -115,93 +134,120 @@
         <!-- TAB 1: INICIO / REPRODUCTOR -->
         <section id="tab-inicio" class="tab-content space-y-8">
             <!-- Hero Banner & Player Card -->
-            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-cardBg via-purple-950/40 to-darkBg border border-purple-800/30 p-6 sm:p-10 shadow-2xl shadow-purple-950/50">
-                <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-accentPink/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative rounded-3xl overflow-hidden bg-cardBg border border-purple-800/40 p-6 sm:p-10 shadow-2xl shadow-purple-950/60">
+                <!-- Dynamic Blurred Album Artwork Background -->
+                <div id="player-bg-blur" class="absolute inset-0 bg-cover bg-center opacity-20 blur-2xl scale-110 pointer-events-none" style="background-image: url('https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png');"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-darkBg/85 via-cardBg/80 to-purple-950/75 pointer-events-none"></div>
+
+                <!-- Ambient Glow Orbs -->
+                <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-accentPink/15 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-accentGold/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-                    <!-- Left: Vinyl & Visual Info -->
+                    <!-- Left: Vinyl & Dynamic Cover Art -->
                     <div class="lg:col-span-5 flex flex-col items-center justify-center">
                         <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
-                            <!-- Vinyl record background effect -->
-                            <div id="vinyl-disc" class="absolute inset-0 rounded-full bg-gradient-to-tr from-gray-900 via-gray-800 to-black border-4 border-gray-800 shadow-2xl flex items-center justify-center paused animate-spin-slow">
-                                <div class="absolute inset-4 rounded-full border border-dashed border-gray-700/60"></div>
-                                <div class="absolute inset-12 rounded-full border border-gray-700/40"></div>
-                                <div class="absolute inset-20 rounded-full border border-gray-700/30"></div>
+                            <!-- Neon Halo -->
+                            <div class="absolute inset-2 rounded-full bg-gradient-to-tr from-accentPink via-purple-600 to-accentGold opacity-35 blur-xl animate-pulse"></div>
+                            <!-- Rotating Vinyl Disc -->
+                            <div id="vinyl-disc" class="absolute inset-0 rounded-full bg-gradient-to-tr from-gray-950 via-gray-900 to-black border-4 border-gray-800/90 shadow-2xl flex items-center justify-center paused animate-spin-slow">
+                                <div class="absolute inset-3 rounded-full border border-dashed border-gray-700/60"></div>
+                                <div class="absolute inset-8 rounded-full border border-gray-700/40"></div>
+                                <div class="absolute inset-14 rounded-full border border-gray-700/30"></div>
                             </div>
-                            <!-- Center Cover Image -->
-                            <div class="relative z-10 w-36 h-36 sm:w-40 sm:h-40 rounded-full border-4 border-accentGold overflow-hidden shadow-xl shadow-accentPink/30 bg-purple-950">
-                                <img id="album-cover" src="https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png" alt="Cover" class="w-full h-full object-cover">
+                            <!-- Center Album Cover Image -->
+                            <div class="relative z-10 w-44 h-44 sm:w-48 sm:h-48 rounded-full border-4 border-accentGold overflow-hidden shadow-2xl shadow-accentPink/40 bg-purple-950">
+                                <img id="album-cover" src="https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png" alt="Carátula Actual" class="w-full h-full object-cover" onerror="this.src='https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png'">
                             </div>
                         </div>
 
-                        <!-- Live Status Badge -->
-                        <div class="mt-6 inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-purple-900/60 border border-pink-500/30 text-xs sm:text-sm text-pink-300 shadow-sm">
-                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-                            <span class="font-semibold uppercase tracking-wider">EN VIVO</span>
-                            <span class="text-gray-400">|</span>
-                            
+                        <!-- Live Status & Real Listeners Badge -->
+                        <div class="mt-6 inline-flex items-center space-x-2.5 px-5 py-2 rounded-full bg-black/50 backdrop-blur-md border border-pink-500/40 text-xs sm:text-sm text-pink-200 shadow-lg">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                            <span class="font-semibold uppercase tracking-wider text-accentPink">EN VIVO</span>
+                            <span class="text-purple-500">|</span>
+                            <i class="fa-solid fa-headphones text-accentGold text-xs"></i>
+                            <span id="listener-count" class="font-bold text-white">--</span>
+                          
                         </div>
                     </div>
 
-                    <!-- Right: Now Playing & Controls -->
+                    <!-- Right: Now Playing Metadata & Single Play/Pause Control -->
                     <div class="lg:col-span-7 flex flex-col justify-center space-y-6">
                         <div>
-                            <span class="text-accentGold text-xs uppercase tracking-widest font-semibold">Radio Magia y Poesía</span>
-                            <h2 id="song-title" class="font-serif text-2xl sm:text-4xl font-bold text-white mt-1 leading-tight">Conectando con la Magia...</h2>
-                            <p id="song-artist" class="text-purple-300 text-sm sm:text-base mt-2 font-light">Disfruta de la mejor poesía y música nocturna y diurna.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-accentGold text-xs uppercase tracking-widest font-semibold flex items-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Sonando Ahora
+                                </span>
+                                <!-- Animated Visualizer Bars -->
+                                <div id="visualizer-bars" class="flex items-end space-x-1 h-6 eq-paused" aria-hidden="true">
+                                    <div class="eq-bar" style="animation-delay: 0.1s"></div>
+                                    <div class="eq-bar" style="animation-delay: 0.3s"></div>
+                                    <div class="eq-bar" style="animation-delay: 0.5s"></div>
+                                    <div class="eq-bar" style="animation-delay: 0.2s"></div>
+                                    <div class="eq-bar" style="animation-delay: 0.4s"></div>
+                                </div>
+                            </div>
+
+                            <h2 id="song-title" class="font-serif text-2xl sm:text-4xl font-bold text-white mt-2 leading-tight">Radio Magia y Poesía</h2>
+                            <p id="song-artist" class="text-pink-300 text-base sm:text-lg mt-1 font-medium">Sintonizando melodías y versos...</p>
                         </div>
 
-                        <!-- Audio Controls Bar -->
-                        <div class="bg-black/40 backdrop-blur-md rounded-2xl p-5 border border-purple-900/60 shadow-inner space-y-4">
-                            <div class="flex items-center justify-between">
-                                <button id="play-pause-btn" onclick="togglePlay()" class="w-14 h-14 rounded-full bg-gradient-to-r from-accentPink to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white flex items-center justify-center shadow-lg shadow-accentPink/40 transition-transform active:scale-95 cursor-pointer">
-                                    <i id="play-icon" class="fa-solid fa-play text-xl ml-0.5"></i>
-                                </button>
-
-                                <button onclick="stopRadio()" class="w-10 h-10 rounded-full bg-purple-900/50 hover:bg-purple-800 text-purple-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer" title="Detener">
-                                    <i class="fa-solid fa-stop text-sm"></i>
-                                </button>
+                        <!-- Stream Controls Bar (Single Play/Pause Button + Volume, NO Stop button) -->
+                        <div class="bg-black/45 backdrop-blur-md rounded-2xl p-5 border border-purple-800/50 shadow-inner">
+                            <div class="flex flex-wrap items-center justify-between gap-4">
+                                <!-- Single Circular Play/Pause Button -->
+                                <div class="flex items-center space-x-4">
+                                    <button id="play-pause-btn" onclick="togglePlay()" aria-label="Reproducir o Pausar" class="w-16 h-16 rounded-full bg-gradient-to-tr from-accentPink via-pink-600 to-accentGold hover:scale-105 text-white flex items-center justify-center shadow-xl shadow-accentPink/40 transition-all active:scale-95 cursor-pointer border-2 border-white/20">
+                                        <i id="play-icon" class="fa-solid fa-play text-2xl ml-1"></i>
+                                    </button>
+                                    <div>
+                                        <p id="player-status-text" class="text-sm font-semibold text-white">Pulsa Play para escuchar</p>
+                                        <p class="text-xs text-purple-300">Señal Digital HD • 128 kbps</p>
+                                    </div>
+                                </div>
 
                                 <!-- Volume Control -->
-                                <div class="flex items-center space-x-3 bg-purple-950/60 px-4 py-2 rounded-xl border border-purple-900/40">
-                                    <i class="fa-solid fa-volume-high text-accentGold text-sm"></i>
-                                    <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1" onchange="changeVolume(this.value)" oninput="changeVolume(this.value)" class="w-20 sm:w-28 accent-accentPink cursor-pointer">
-                                    <span id="volume-val" class="text-xs text-gray-300 w-8 text-right">100%</span>
+                                <div class="flex items-center space-x-3 bg-purple-950/70 px-4 py-3 rounded-xl border border-purple-800/50 w-full sm:w-auto justify-between sm:justify-start">
+                                    <button onclick="toggleMute()" class="text-accentGold hover:text-white transition-colors" aria-label="Silenciar">
+                                        <i id="volume-icon" class="fa-solid fa-volume-high text-base"></i>
+                                    </button>
+                                    <input type="range" id="volume-slider" min="0" max="1" step="0.02" value="1" oninput="changeVolume(this.value)" onchange="changeVolume(this.value)" class="w-full sm:w-28 accent-accentPink cursor-pointer">
+                                    <span id="volume-val" class="text-xs font-medium text-gray-200 w-9 text-right">100%</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Poetic Quote Banner -->
-                        <blockquote class="italic text-sm text-purple-200/80 border-l-2 border-accentGold pl-4 py-1">
+                        <blockquote class="italic text-sm text-purple-200/90 border-l-2 border-accentGold pl-4 py-1 bg-purple-950/20 rounded-r-xl">
                             "La poesía es el eco de la melodía del universo en el corazón de los hombres."
                         </blockquote>
                     </div>
                 </div>
             </div>
 
-            <!-- Program Grid & Highlights -->
+            <!-- Programming & Highlights -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl hover:border-accentPink/40 transition-all">
                     <div class="w-12 h-12 rounded-xl bg-purple-900/50 text-accentPink flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-feather"></i>
+                        <i class="fa-solid fa-feather-pointed"></i>
                     </div>
                     <h3 class="font-serif text-lg font-bold text-white mb-2">Poesía Viva</h3>
-                    <p class="text-sm text-gray-400">Lecturas de grandes vatios y poetas contemporáneos que alimentan el espíritu y despiertan emociones profundas.</p>
+                    <p class="text-sm text-gray-400">Lecturas de grandes vates y poetas contemporáneos que alimentan el espíritu y despiertan emociones profundas.</p>
                 </div>
                 <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl hover:border-accentGold/40 transition-all">
                     <div class="w-12 h-12 rounded-xl bg-purple-900/50 text-accentGold flex items-center justify-center text-xl mb-4">
                         <i class="fa-solid fa-compact-disc"></i>
                     </div>
                     <h3 class="font-serif text-lg font-bold text-white mb-2">Melodías Mágicas</h3>
-                    <p class="text-sm text-gray-400">Selección musical instrumental, baladas, jazz suave y trova para acompañar tus momentos de introspección.</p>
+                    <p class="text-sm text-gray-400">Selección musical romántica, baladas del recuerdo, trova y boleros para acompañar cada instante del día y la noche.</p>
                 </div>
                 <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl hover:border-pink-500/40 transition-all">
                     <div class="w-12 h-12 rounded-xl bg-purple-900/50 text-pink-400 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-comments"></i>
+                        <i class="fa-solid fa-star"></i>
                     </div>
-                    <h3 class="font-serif text-lg font-bold text-white mb-2">Espacio Abierto</h3>
-                    <p class="text-sm text-gray-400">Conéctate con nuestra comunidad, comparte tus versos y solicita tus canciones favoritas en directo.</p>
+                    <h3 class="font-serif text-lg font-bold text-white mb-2">Noches de Bohemia</h3>
+                    <p class="text-sm text-gray-400">Desde las 22:00 hrs, un espacio íntimo dedicado al romance, declamaciones y clásicos inolvidables.</p>
                 </div>
             </div>
         </section>
@@ -210,43 +256,42 @@
         <section id="tab-actualidad" class="tab-content hidden space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-purple-900/40 pb-4">
                 <div>
-                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Actualidad Nacional y Cultural</h2>
-                    <p class="text-sm text-purple-300">Noticias de Chile, cultura, literatura y eventos artísticos.</p>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Noticias Nacionales y Culturales</h2>
+                    <p class="text-sm text-purple-300">Actualidad de Chile, literatura, patrimonio y eventos artísticos.</p>
                 </div>
                 <span class="mt-2 md:mt-0 text-xs px-3 py-1 rounded-full bg-accentPink/20 text-accentPink border border-accentPink/30 font-medium">Actualizado hoy</span>
             </div>
 
-            <div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically populated or static chilean news -->
-                <div class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
-                    <img src="https://placehold.co/600x350/151026/f59e0b?text=Cultura+Chile" alt="Noticia 1" class="w-full h-48 object-cover">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <article class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
+                    <img src="https://placehold.co/600x350/151026/f59e0b?text=Literatura+Chile" alt="Encuentro Nacional de Poesía" class="w-full h-48 object-cover">
                     <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs text-accentGold font-semibold uppercase mb-2">Literatura</span>
-                        <h3 class="font-serif text-lg font-bold text-white mb-2">Encuentro Nacional de Poesía en Santiago reúne a nuevos talentos</h3>
-                        <p class="text-sm text-gray-400 mb-4 flex-grow">La capital se convierte en el epicentro de las letras hispanoamericanas con lecturas en plazas y bibliotecas públicas.</p>
-                        <button onclick="openNewsModal('Encuentro Nacional de Poesía en Santiago', 'La capital se convierte en el epicentro de las letras hispanoamericanas con lecturas en plazas y bibliotecas públicas. Cientos de autores nacionales e internacionales comparten sus obras en este festival cultural abierto a toda la comunidad.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center">Leer completo <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
+                        <span class="text-xs text-accentGold font-semibold uppercase mb-2">Literatura Nacional</span>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Encuentro Nacional de Poesía reúne a voces de todo Chile</h3>
+                        <p class="text-sm text-gray-400 mb-4 flex-grow">Bibliotecas públicas y centros culturales celebran la palabra escrita con recitales abiertos a la comunidad en diversas regiones.</p>
+                        <button onclick="openNewsModal('Encuentro Nacional de Poesía reúne a voces de todo Chile', 'Bibliotecas públicas y centros culturales de Santiago, Valparaíso y Concepción celebran la palabra escrita con recitales abiertos a la comunidad. Poetas consagrados y nuevas generaciones comparten sus versos en homenaje a la tradición lírica chilena.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center cursor-pointer">Leer nota completa <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
                     </div>
-                </div>
+                </article>
 
-                <div class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
-                    <img src="https://placehold.co/600x350/151026/ff007f?text=Patrimonio+Chile" alt="Noticia 2" class="w-full h-48 object-cover">
+                <article class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
+                    <img src="https://placehold.co/600x350/151026/ff007f?text=Patrimonio+Cultural" alt="Ruta Poética" class="w-full h-48 object-cover">
                     <div class="p-6 flex flex-col flex-grow">
                         <span class="text-xs text-accentPink font-semibold uppercase mb-2">Patrimonio</span>
-                        <h3 class="font-serif text-lg font-bold text-white mb-2">Valparaíso inaugura ruta histórica de los poetas bohemios</h3>
-                        <p class="text-sm text-gray-400 mb-4 flex-grow">Un recorrido por los cerros porteños que rinde homenaje a los rincones donde surgieron versos inmortales de la costa chilena.</p>
-                        <button onclick="openNewsModal('Valparaíso inaugura ruta histórica de los poetas bohemios', 'Un recorrido por los cerros porteños que rinde homenaje a los rincones donde surgieron versos inmortales de la costa chilena. La iniciativa municipal busca revitalizar el turismo cultural y literario.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center">Leer completo <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Inauguran nueva ruta cultural dedicada a los poetas del litoral</h3>
+                        <p class="text-sm text-gray-400 mb-4 flex-grow">Un recorrido patrimonial por la costa central que rescata las casas museos y miradores que inspiraron obras universales.</p>
+                        <button onclick="openNewsModal('Inauguran nueva ruta cultural dedicada a los poetas del litoral', 'Un recorrido patrimonial por la costa central de Chile rescata las casas museos, caletas y miradores que inspiraron obras universales de nuestra literatura. La ruta cuenta con audioguías poéticas gratuitas para visitantes.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center cursor-pointer">Leer nota completa <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
                     </div>
-                </div>
+                </article>
 
-                <div class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
-                    <img src="https://placehold.co/600x350/151026/9333ea?text=Musica+Chilena" alt="Noticia 3" class="w-full h-48 object-cover">
+                <article class="bg-cardBg rounded-2xl overflow-hidden border border-purple-900/40 shadow-xl flex flex-col">
+                    <img src="https://placehold.co/600x350/151026/a855f7?text=Artes+y+Cultura" alt="Orquestas Juveniles" class="w-full h-48 object-cover">
                     <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs text-purple-400 font-semibold uppercase mb-2">Música Chilena</span>
-                        <h3 class="font-serif text-lg font-bold text-white mb-2">Orquestas juveniles llevan la sinfonía a regiones del sur</h3>
-                        <p class="text-sm text-gray-400 mb-4 flex-grow">Gira nacional de conciertos gratuitos recorre las regiones de Los Ríos y Los Lagos con repertorio clásico y folclórico.</p>
-                        <button onclick="openNewsModal('Orquestas juveniles llevan la sinfonía a regiones del sur', 'Gira nacional de conciertos gratuitos recorre las regiones de Los Ríos y Los Lagos con repertorio clásico y folclórico, fomentando el acceso a la música docta en zonas rurales.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center">Leer completo <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
+                        <span class="text-xs text-purple-400 font-semibold uppercase mb-2">Cultura y Sociedad</span>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Temporada de conciertos gratuitos llega a teatros regionales</h3>
+                        <p class="text-sm text-gray-400 mb-4 flex-grow">Agrupaciones sinfónicas y de cámara presentan repertorio de música chilena y latinoamericana con entrada liberada.</p>
+                        <button onclick="openNewsModal('Temporada de conciertos gratuitos llega a teatros regionales', 'Agrupaciones sinfónicas y de cámara de todo el país presentan un ciclo especial con arreglos de música chilena y latinoamericana, acercando la cultura musical a las familias en teatros municipales.')" class="text-accentPink text-sm font-semibold hover:underline inline-flex items-center cursor-pointer">Leer nota completa <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -254,27 +299,27 @@
         <section id="tab-musica" class="tab-content hidden space-y-6">
             <div class="border-b border-purple-900/40 pb-4">
                 <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Noticias Musicales y Lanzamientos</h2>
-                <p class="text-sm text-purple-300">Novedades discográficas, entrevistas y discos recomendados de la semana.</p>
+                <p class="text-sm text-purple-300">Novedades discográficas, especiales acústicos y discos recomendados de nuestra programación.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl flex flex-col sm:flex-row gap-6 items-center">
-                    <img src="https://placehold.co/200x200/2d1b4e/f59e0b?text=Disco" alt="Album" class="w-36 h-36 rounded-xl object-cover shadow-md flex-shrink-0">
+                    <img src="https://placehold.co/200x200/2d1b4e/f59e0b?text=Baladas+Oro" alt="Especial Baladas" class="w-36 h-36 rounded-xl object-cover shadow-md flex-shrink-0">
                     <div>
-                        <span class="text-xs text-accentGold font-semibold uppercase">Estreno Semanal</span>
-                        <h3 class="font-serif text-xl font-bold text-white mt-1 mb-2">"Sinfonía del Silencio" - Nuevo Álbum Instrumental</h3>
-                        <p class="text-sm text-gray-300 mb-3">Una obra maestra de piano y cuerdas ambientada en los paisajes patagónicos. Ideal para la lectura y la meditación.</p>
-                        <span class="text-xs text-purple-400"><i class="fa-solid fa-clock mr-1"></i> Disponible en rotación 24/7</span>
+                        <span class="text-xs text-accentGold font-semibold uppercase">Recomendado de la Semana</span>
+                        <h3 class="font-serif text-xl font-bold text-white mt-1 mb-2">Antología de la Balada Romántica Hispanoamericana</h3>
+                        <p class="text-sm text-gray-300 mb-3">Edición remasterizada que reúne las voces más emblemáticas de los años 70, 80 y 90 en sonido de alta fidelidad.</p>
+                        <span class="text-xs text-purple-400"><i class="fa-solid fa-radio mr-1"></i> En rotación diaria en Radio Magia y Poesía</span>
                     </div>
                 </div>
 
                 <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl flex flex-col sm:flex-row gap-6 items-center">
-                    <img src="https://placehold.co/200x200/2d1b4e/ff007f?text=Trova" alt="Album" class="w-36 h-36 rounded-xl object-cover shadow-md flex-shrink-0">
+                    <img src="https://placehold.co/200x200/2d1b4e/ff007f?text=Trova+y+Bolero" alt="Especial Trova" class="w-36 h-36 rounded-xl object-cover shadow-md flex-shrink-0">
                     <div>
-                        <span class="text-xs text-accentPink font-semibold uppercase">Especial Trova</span>
-                        <h3 class="font-serif text-xl font-bold text-white mt-1 mb-2">Homenaje a los grandes trovadores latinoamericanos</h3>
-                        <p class="text-sm text-gray-300 mb-3">Recordamos las letras que marcaron generaciones con un especial acústico todos los viernes a las 21:00 hrs.</p>
-                        <span class="text-xs text-purple-400"><i class="fa-solid fa-calendar mr-1"></i> Todos los viernes</span>
+                        <span class="text-xs text-accentPink font-semibold uppercase">Especial Nocturno</span>
+                        <h3 class="font-serif text-xl font-bold text-white mt-1 mb-2">Cuerdas y Poesía: El Renacer del Bolero Acústico</h3>
+                        <p class="text-sm text-gray-300 mb-3">Nuevos intérpretes rescatan la esencia de los tríos clásicos con arreglos íntimos de guitarra, piano y violonchelo.</p>
+                        <span class="text-xs text-purple-400"><i class="fa-solid fa-calendar mr-1"></i> Especial todos los viernes 21:00 hrs</span>
                     </div>
                 </div>
             </div>
@@ -283,8 +328,8 @@
         <!-- TAB 4: EL TIEMPO EN CHILE -->
         <section id="tab-tiempo" class="tab-content hidden space-y-6">
             <div class="border-b border-purple-900/40 pb-4">
-                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Pronóstico del Tiempo en Chile</h2>
-                <p class="text-sm text-purple-300">Condiciones meteorológicas actuales para las principales ciudades del país.</p>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">El Tiempo en Chile</h2>
+                <p class="text-sm text-purple-300">Panorama meteorológico para las principales ciudades del país.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -294,11 +339,25 @@
                         <i class="fa-solid fa-sun"></i>
                     </div>
                     <h3 class="font-serif text-lg font-bold text-white">Santiago</h3>
-                    <p class="text-3xl font-bold text-accentGold my-2">24°C</p>
-                    <p class="text-xs text-gray-400">Despejado / Aire Limpio</p>
+                    <p class="text-3xl font-bold text-accentGold my-2">23°C</p>
+                    <p class="text-xs text-gray-400">Despejado / Tarde templada</p>
                     <div class="mt-4 pt-4 border-t border-purple-900/40 w-full text-xs text-purple-300 flex justify-between">
-                        <span>Min: 12°C</span>
-                        <span>Máx: 26°C</span>
+                        <span>Mín: 10°C</span>
+                        <span>Máx: 25°C</span>
+                    </div>
+                </div>
+
+                <!-- San Fernando / Rancagua -->
+                <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl text-center flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-full bg-pink-500/10 text-accentPink flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <h3 class="font-serif text-lg font-bold text-white">San Fernando</h3>
+                    <p class="text-3xl font-bold text-accentPink my-2">22°C</p>
+                    <p class="text-xs text-gray-400">Soleado / Brisa suave</p>
+                    <div class="mt-4 pt-4 border-t border-purple-900/40 w-full text-xs text-purple-300 flex justify-between">
+                        <span>Mín: 9°C</span>
+                        <span>Máx: 24°C</span>
                     </div>
                 </div>
 
@@ -309,9 +368,9 @@
                     </div>
                     <h3 class="font-serif text-lg font-bold text-white">Valparaíso</h3>
                     <p class="text-3xl font-bold text-blue-400 my-2">18°C</p>
-                    <p class="text-xs text-gray-400">Parcial / Nubosidad costera</p>
+                    <p class="text-xs text-gray-400">Escasa nubosidad</p>
                     <div class="mt-4 pt-4 border-t border-purple-900/40 w-full text-xs text-purple-300 flex justify-between">
-                        <span>Min: 13°C</span>
+                        <span>Mín: 12°C</span>
                         <span>Máx: 19°C</span>
                     </div>
                 </div>
@@ -323,24 +382,10 @@
                     </div>
                     <h3 class="font-serif text-lg font-bold text-white">Concepción</h3>
                     <p class="text-3xl font-bold text-purple-300 my-2">16°C</p>
-                    <p class="text-xs text-gray-400">Nublado con brisa</p>
+                    <p class="text-xs text-gray-400">Parcialmente nublado</p>
                     <div class="mt-4 pt-4 border-t border-purple-900/40 w-full text-xs text-purple-300 flex justify-between">
-                        <span>Min: 10°C</span>
+                        <span>Mín: 9°C</span>
                         <span>Máx: 17°C</span>
-                    </div>
-                </div>
-
-                <!-- La Serena -->
-                <div class="bg-cardBg rounded-2xl p-6 border border-purple-900/40 shadow-xl text-center flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full bg-pink-500/10 text-accentPink flex items-center justify-center text-2xl mb-4">
-                        <i class="fa-solid fa-sun"></i>
-                    </div>
-                    <h3 class="font-serif text-lg font-bold text-white">La Serena</h3>
-                    <p class="text-3xl font-bold text-accentPink my-2">20°C</p>
-                    <p class="text-xs text-gray-400">Soleado / Viento suave</p>
-                    <div class="mt-4 pt-4 border-t border-purple-900/40 w-full text-xs text-purple-300 flex justify-between">
-                        <span>Min: 12°C</span>
-                        <span>Máx: 21°C</span>
                     </div>
                 </div>
             </div>
@@ -350,57 +395,57 @@
         <section id="tab-horoscopo" class="tab-content hidden space-y-6">
             <div class="border-b border-purple-900/40 pb-4">
                 <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Horóscopo Místico y Poético</h2>
-                <p class="text-sm text-purple-300">Selecciona tu signo zodiacal para descubrir el mensaje estelar y poético para hoy.</p>
+                <p class="text-sm text-purple-300">Elige tu signo zodiacal para revelar tu mensaje astral y poético del día.</p>
             </div>
 
             <!-- Zodiac Selector Grid -->
             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                <button onclick="selectZodiac('aries', 'Aries', 'Fuego', 'Tu energía interior brilla hoy con la fuerza de mil estrellas. Es momento de escribir un nuevo verso en tu historia sin mirar atrás.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentPink text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Aries', 'Fuego', 'Tu energía interior brilla hoy con la fuerza de mil estrellas. Es momento de escribir un nuevo verso en tu historia sin mirar atrás.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentPink text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-fire text-2xl text-accentPink mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Aries</span>
                 </button>
-                <button onclick="selectZodiac('tauro', 'Tauro', 'Tierra', 'La calma de la tierra te envuelve. Disfruta de la música del viento y permite que la paciencia sea tu mejor consejera.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Tauro', 'Tierra', 'La calma de la tierra te envuelve. Disfruta de la música del viento y permite que la paciencia sea tu mejor consejera.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-earth-americas text-2xl text-accentGold mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Tauro</span>
                 </button>
-                <button onclick="selectZodiac('geminis', 'Géminis', 'Aire', 'Tus pensamientos vuelan como hojas en otoño, formando poemas invisibles en el aire. Comparte tu luz con el mundo.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-purple-400 text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Géminis', 'Aire', 'Tus pensamientos vuelan como hojas en otoño, formando poemas invisibles en el aire. Comparte tu luz con el mundo.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-purple-400 text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-wind text-2xl text-purple-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Géminis</span>
                 </button>
-                <button onclick="selectZodiac('cancer', 'Cáncer', 'Agua', 'Las mareas de tus emociones traen recuerdos hermosos. Abraza tu sensibilidad como el mayor de tus dones mágicos.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-blue-400 text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Cáncer', 'Agua', 'Las mareas de tus emociones traen recuerdos hermosos. Abraza tu sensibilidad como el mayor de tus dones mágicos.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-blue-400 text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-water text-2xl text-blue-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Cáncer</span>
                 </button>
-                <button onclick="selectZodiac('leo', 'Leo', 'Fuego', 'El sol interior ilumina tu camino con seguridad y gracia. Deja que tu liderazgo inspire versos de valentía en quienes te rodean.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Leo', 'Fuego', 'El sol interior ilumina tu camino con seguridad y gracia. Deja que tu liderazgo inspire versos de valentía en quienes te rodean.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-sun text-2xl text-accentGold mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Leo</span>
                 </button>
-                <button onclick="selectZodiac('virgo', 'Virgo', 'Tierra', 'Cada detalle de tu vida forma una bellísima partitura. Ordena tus pensamientos y la inspiración llegará por sí sola.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-green-400 text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Virgo', 'Tierra', 'Cada detalle de tu vida forma una bellísima partitura. Ordena tus pensamientos y la inspiración llegará por sí sola.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-green-400 text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-seedling text-2xl text-green-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Virgo</span>
                 </button>
-                <button onclick="selectZodiac('libra', 'Libra', 'Aire', 'La armonía busca un espacio en tu jornada. Busca el equilibrio entre el compás de la música y la quietud del alma.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-pink-400 text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Libra', 'Aire', 'La armonía busca un espacio en tu jornada. Busca el equilibrio entre el compás de la música y la quietud del alma.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-pink-400 text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-scale-balanced text-2xl text-pink-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Libra</span>
                 </button>
-                <button onclick="selectZodiac('escorpio', 'Escorpio', 'Agua', 'La profundidad de tu intuición revela verdades ocultas. Un misterio poético se resolverá hoy ante tus ojos.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-red-500 text-center transition-all cursor-pointer group">
-                    <i class="fa-solid fa-spider text-2xl text-red-500 mb-2 group-hover:scale-110 transition-transform"></i>
+                <button onclick="selectZodiac('Escorpio', 'Agua', 'La profundidad de tu intuición revela verdades ocultas. Un misterio poético se resolverá hoy ante tus ojos.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-red-500 text-center transition-all cursor-pointer group">
+                    <i class="fa-solid fa-moon text-2xl text-red-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Escorpio</span>
                 </button>
-                <button onclick="selectZodiac('sagitario', 'Sagitario', 'Fuego', 'Nuevos horizontes llaman a tu puerta. La aventura y la poesía viajera se combinan en un día inolvidable.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
-                    <i class="fa-solid fa-bow-arrow text-2xl text-accentGold mb-2 group-hover:scale-110 transition-transform"></i>
+                <button onclick="selectZodiac('Sagitario', 'Fuego', 'Nuevos horizontes llaman a tu puerta. La aventura y la poesía viajera se combinan en un día inolvidable.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-accentGold text-center transition-all cursor-pointer group">
+                    <i class="fa-solid fa-compass text-2xl text-accentGold mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Sagitario</span>
                 </button>
-                <button onclick="selectZodiac('capricornio', 'Capricornio', 'Tierra', 'La constancia construye castillos en el tiempo. Tus metas florecen con la paciencia de una vieja melodía.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-purple-400 text-center transition-all cursor-pointer group">
+                <button onclick="selectZodiac('Capricornio', 'Tierra', 'La constancia construye castillos en el tiempo. Tus metas florecen con la paciencia de una vieja melodía.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-purple-400 text-center transition-all cursor-pointer group">
                     <i class="fa-solid fa-mountain text-2xl text-purple-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Capricornio</span>
                 </button>
-                <button onclick="selectZodiac('acuario', 'Acuario', 'Aire', 'Tus ideas originales desataran una tormenta de creatividad. Escribe tus sueños antes de que se desvanezcan en el alba.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-blue-400 text-center transition-all cursor-pointer group">
-                    <i class="fa-solid fa-droplet text-2xl text-blue-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                <button onclick="selectZodiac('Acuario', 'Aire', 'Tus ideas originales desatarán una tormenta de creatividad. Escribe tus sueños antes de que se desvanezcan en el alba.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-blue-400 text-center transition-all cursor-pointer group">
+                    <i class="fa-solid fa-star text-2xl text-blue-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Acuario</span>
                 </button>
-                <button onclick="selectZodiac('piscis', 'Piscis', 'Agua', 'Los sueños y la realidad se entrelazan en tu imaginación. La música de la radio será la banda sonora perfecta de tu día.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-indigo-400 text-center transition-all cursor-pointer group">
-                    <i class="fa-solid fa-fish text-2xl text-indigo-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                <button onclick="selectZodiac('Piscis', 'Agua', 'Los sueños y la realidad se entrelazan en tu imaginación. La música de la radio será la banda sonora perfecta de tu día.')" class="zodiac-card bg-cardBg p-4 rounded-xl border border-purple-900/40 hover:border-indigo-400 text-center transition-all cursor-pointer group">
+                    <i class="fa-solid fa-water text-2xl text-indigo-400 mb-2 group-hover:scale-110 transition-transform"></i>
                     <span class="block text-xs font-semibold text-white">Piscis</span>
                 </button>
             </div>
@@ -424,66 +469,282 @@
     <!-- News Modal -->
     <div id="news-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-lg w-full rounded-2xl p-6 sm:p-8 border border-purple-900 shadow-2xl relative space-y-4">
-            <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             <h3 id="modal-title" class="font-serif text-xl sm:text-2xl font-bold text-white"></h3>
             <p id="modal-body" class="text-sm text-gray-300 leading-relaxed"></p>
         </div>
     </div>
 
-    <!-- Hidden Audio Element -->
+    <!-- Audio Stream Element -->
     <audio id="radio-audio" src="https://streaming.viphosting.cl:8236/stream" preload="none"></audio>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript Logic: Audio, Real Shoutcast v2 Stats & Multi-Source Album Artwork -->
     <script>
+        const DEFAULT_COVER = "https://i.postimg.cc/4xsZxS1f/cropped-circle-image.png";
+        const STREAM_BASE = "https://streaming.viphosting.cl:8236";
+
         const audio = document.getElementById('radio-audio');
-        const playPauseBtn = document.getElementById('play-pause-btn');
         const playIcon = document.getElementById('play-icon');
+        const playerStatusText = document.getElementById('player-status-text');
         const vinylDisc = document.getElementById('vinyl-disc');
+        const visualizerBars = document.getElementById('visualizer-bars');
         const listenerCountEl = document.getElementById('listener-count');
         const songTitleEl = document.getElementById('song-title');
         const songArtistEl = document.getElementById('song-artist');
         const albumCoverEl = document.getElementById('album-cover');
+        const playerBgBlurEl = document.getElementById('player-bg-blur');
         const volumeSlider = document.getElementById('volume-slider');
         const volumeVal = document.getElementById('volume-val');
+        const volumeIcon = document.getElementById('volume-icon');
 
         let isPlaying = false;
+        let lastTrackedSong = "";
+        let lastVolume = 1;
 
-        // Toggle Audio Play / Pause
+        // Single Play / Pause Toggle (No Stop Button)
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
-                isPlaying = false;
-                playIcon.className = "fa-solid fa-play text-xl ml-0.5";
-                vinylDisc.classList.add('paused');
+                setPlayingState(false);
             } else {
+                // Force fresh live buffer on resume
+                audio.src = `${STREAM_BASE}/stream?nocache=${Date.now()}`;
+                playerStatusText.innerText = "Conectando señal...";
                 audio.play().then(() => {
-                    isPlaying = true;
-                    playIcon.className = "fa-solid fa-pause text-xl";
-                    vinylDisc.classList.remove('paused');
+                    setPlayingState(true);
                 }).catch(err => {
-                    console.error("Error al reproducir:", err);
-                    // Fallback or user prompt if browser blocks autoplay
+                    console.error("Error de reproducción:", err);
+                    setPlayingState(false);
+                    playerStatusText.innerText = "Toca nuevamente para iniciar";
                 });
             }
         }
 
-        function stopRadio() {
-            audio.pause();
-            audio.currentTime = 0;
-            isPlaying = false;
-            playIcon.className = "fa-solid fa-play text-xl ml-0.5";
-            vinylDisc.classList.add('paused');
+        function setPlayingState(playing) {
+            isPlaying = playing;
+            if (playing) {
+                playIcon.className = "fa-solid fa-pause text-2xl";
+                playerStatusText.innerText = "Reproduciendo en vivo";
+                vinylDisc.classList.remove('paused');
+                visualizerBars.classList.remove('eq-paused');
+            } else {
+                playIcon.className = "fa-solid fa-play text-2xl ml-1";
+                playerStatusText.innerText = "En pausa — Pulsa Play";
+                vinylDisc.classList.add('paused');
+                visualizerBars.classList.add('eq-paused');
+            }
         }
 
         function changeVolume(val) {
-            audio.volume = val;
-            volumeVal.innerText = Math.round(val * 100) + '%';
+            const numVal = parseFloat(val);
+            audio.volume = numVal;
+            if (numVal > 0) lastVolume = numVal;
+            volumeVal.innerText = Math.round(numVal * 100) + '%';
+            updateVolumeIcon(numVal);
         }
 
-        // Tab Switching
+        function toggleMute() {
+            if (audio.volume > 0) {
+                volumeSlider.value = 0;
+                changeVolume(0);
+            } else {
+                const restore = lastVolume > 0 ? lastVolume : 1;
+                volumeSlider.value = restore;
+                changeVolume(restore);
+            }
+        }
+
+        function updateVolumeIcon(val) {
+            if (val === 0) {
+                volumeIcon.className = "fa-solid fa-volume-xmark text-base text-red-400";
+            } else if (val < 0.5) {
+                volumeIcon.className = "fa-solid fa-volume-low text-base";
+            } else {
+                volumeIcon.className = "fa-solid fa-volume-high text-base";
+            }
+        }
+
+        // Smoothly update Cover Art & Blurred Background
+        function applyCoverArt(imageUrl) {
+            const targetUrl = imageUrl || DEFAULT_COVER;
+            if (albumCoverEl.src === targetUrl) return;
+
+            const preloader = new Image();
+            preloader.onload = () => {
+                albumCoverEl.style.opacity = '0.2';
+                setTimeout(() => {
+                    albumCoverEl.src = targetUrl;
+                    albumCoverEl.style.opacity = '1';
+                    playerBgBlurEl.style.backgroundImage = `url('${targetUrl}')`;
+                }, 250);
+            };
+            preloader.onerror = () => {
+                albumCoverEl.src = DEFAULT_COVER;
+                playerBgBlurEl.style.backgroundImage = `url('${DEFAULT_COVER}')`;
+            };
+            preloader.src = targetUrl;
+        }
+
+        // Clean track string for accurate cover lookup
+        function sanitizeTrackQuery(rawTitle) {
+            return rawTitle
+                .replace(/\[.*?\]/g, '')      // Remove [Official Video], [HD], etc.
+                .replace(/\(.*?\)/g, '')      // Remove (Remastered), (En Vivo), etc.
+                .replace(/ft\.|feat\./gi, '') // Remove featuring markers
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+        }
+
+        // Multi-source Cover Art Search: 1) iTunes API -> 2) Deezer API via CORS proxy -> 3) Default Logo
+        async function fetchAlbumCover(rawSongTitle) {
+            if (!rawSongTitle || rawSongTitle.toLowerCase().includes('radio magia')) {
+                applyCoverArt(DEFAULT_COVER);
+                return;
+            }
+
+            const cleanQuery = sanitizeTrackQuery(rawSongTitle);
+            if (!cleanQuery || cleanQuery.length < 3) {
+                applyCoverArt(DEFAULT_COVER);
+                return;
+            }
+
+            // 1. Primary Lookup: iTunes Search API (supports direct browser CORS)
+            try {
+                const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(cleanQuery)}&media=music&entity=song&limit=1`;
+                const res = await fetch(itunesUrl);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.results && data.results.length > 0 && data.results[0].artworkUrl100) {
+                        const highResCover = data.results[0].artworkUrl100.replace('100x100bb', '600x600bb');
+                        applyCoverArt(highResCover);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn("iTunes cover lookup failed, trying Deezer fallback...", err);
+            }
+
+            // 2. Secondary Lookup: Deezer API via CORS Proxy
+            try {
+                const deezerEndpoint = `https://api.deezer.com/search?q=${encodeURIComponent(cleanQuery)}&limit=1`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(deezerEndpoint)}`;
+                const res = await fetch(proxyUrl);
+                if (res.ok) {
+                    const wrapper = await res.json();
+                    const deezerData = JSON.parse(wrapper.contents);
+                    if (deezerData.data && deezerData.data.length > 0 && deezerData.data[0].album) {
+                        const album = deezerData.data[0].album;
+                        const cover = album.cover_xl || album.cover_big || album.cover_medium;
+                        if (cover) {
+                            applyCoverArt(cover);
+                            return;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Deezer cover lookup failed, using default logo.", err);
+            }
+
+            // 3. Fallback: Official Radio Logo
+            applyCoverArt(DEFAULT_COVER);
+        }
+
+        // Parse "Artist - Title" into separate display lines
+        function updateNowPlayingDisplay(rawSongTitle) {
+            if (!rawSongTitle) return;
+            const parts = rawSongTitle.split(' - ');
+            if (parts.length >= 2) {
+                const artist = parts[0].trim();
+                const title = parts.slice(1).join(' - ').trim();
+                songTitleEl.innerText = title || rawSongTitle;
+                songArtistEl.innerText = artist || "Radio Magia y Poesía";
+            } else {
+                songTitleEl.innerText = rawSongTitle;
+                songArtistEl.innerText = "Radio Magia y Poesía • En Vivo";
+            }
+        }
+
+        // Cascading Shoutcast v2 Metadata & Real Listener Count Fetcher
+        async function fetchShoutcastMetadata() {
+            const jsonStatsUrl = `${STREAM_BASE}/stats?json=1&sid=1`;
+            const html7Url = `${STREAM_BASE}/7.html`;
+
+            let songTitle = null;
+            let listeners = null;
+
+            // Strategy A: Direct fetch to /stats?json=1&sid=1
+            try {
+                const res = await fetch(jsonStatsUrl, { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    songTitle = data.songtitle;
+                    listeners = data.currentlisteners ?? data.uniquelisteners;
+                }
+            } catch (_) {}
+
+            // Strategy B: AllOrigins JSON wrapper to /stats?json=1&sid=1
+            if (!songTitle && listeners === null) {
+                try {
+                    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(jsonStatsUrl)}&_=${Date.now()}`);
+                    if (res.ok) {
+                        const wrapper = await res.json();
+                        const data = JSON.parse(wrapper.contents);
+                        songTitle = data.songtitle;
+                        listeners = data.currentlisteners ?? data.uniquelisteners;
+                    }
+                } catch (_) {}
+            }
+
+            // Strategy C: CorsProxy.io to /stats?json=1&sid=1
+            if (!songTitle && listeners === null) {
+                try {
+                    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(jsonStatsUrl)}`, { cache: 'no-store' });
+                    if (res.ok) {
+                        const data = await res.json();
+                        songTitle = data.songtitle;
+                        listeners = data.currentlisteners ?? data.uniquelisteners;
+                    }
+                } catch (_) {}
+            }
+
+            // Strategy D: Shoutcast /7.html fallback via AllOrigins
+            if (!songTitle && listeners === null) {
+                try {
+                    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(html7Url)}&_=${Date.now()}`);
+                    if (res.ok) {
+                        const wrapper = await res.json();
+                        const bodyMatch = wrapper.contents.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+                        const csvText = bodyMatch ? bodyMatch[1] : wrapper.contents;
+                        const fields = csvText.split(',');
+                        if (fields.length >= 7) {
+                            listeners = fields[0].trim();
+                            songTitle = fields.slice(6).join(',').trim();
+                        }
+                    }
+                } catch (_) {}
+            }
+
+            // Update Real Listeners Counter
+            if (listeners !== null && listeners !== undefined && !isNaN(Number(listeners))) {
+                listenerCountEl.innerText = listeners;
+            }
+
+            // Update Song Metadata & Trigger Cover Lookup if Song Changed
+            if (songTitle && songTitle.trim() !== "") {
+                const cleanTitle = songTitle.trim();
+                if (cleanTitle !== lastTrackedSong) {
+                    lastTrackedSong = cleanTitle;
+                    updateNowPlayingDisplay(cleanTitle);
+                    fetchAlbumCover(cleanTitle);
+                }
+            }
+        }
+
+        // Tab Navigation Logic
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.remove('hidden');
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.className = "tab-btn px-4 py-2 rounded-full text-sm font-medium transition-all text-gray-300 hover:text-white hover:bg-purple-950/60";
@@ -497,8 +758,7 @@
         }
 
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
         // News Modal
@@ -513,63 +773,16 @@
         }
 
         // Horoscope Selector
-        function selectZodiac(id, name, element, prediction) {
-            document.getElementById('zodiac-title').innerText = `${name} (${element})`;
+        function selectZodiac(name, element, prediction) {
+            document.getElementById('zodiac-title').innerText = `${name} — Elemento ${element}`;
             document.getElementById('zodiac-desc').innerText = prediction;
         }
 
-        // Fetch real-time Shoutcast stats (/stats?json=1) without CORS blocking
-        async function fetchShoutcastStats() {
-            const statsUrl = 'https://streaming.viphosting.cl:8236/stats?json=1';
-            // Use multiple robust CORS proxies in sequence
-            const proxies = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(statsUrl)}`,
-                `https://corsproxy.io/?${encodeURIComponent(statsUrl)}`,
-                statsUrl
-            ];
-
-            let data = null;
-            for (const proxyUrl of proxies) {
-                try {
-                    const response = await fetch(proxyUrl, { cache: 'no-cache' });
-                    if (response.ok) {
-                        data = await response.json();
-                        break;
-                    }
-                } catch (e) {
-                    // Try next proxy
-                }
-            }
-
-            if (data) {
-                // Listeners count
-                if (typeof data.uniquelisteners !== 'undefined') {
-                    listenerCountEl.innerText = data.uniquelisteners;
-                } else if (typeof data.listeners !== 'undefined') {
-                    listenerCountEl.innerText = data.listeners;
-                } else {
-                    listenerCountEl.innerText = "14";
-                }
-
-                // Song Title
-                if (data.songtitle) {
-                    songTitleEl.innerText = data.songtitle;
-                    songArtistEl.innerText = data.servertitle || "Radio Magia y Poesía";
-                } else {
-                    songTitleEl.innerText = "Magia y Poesía en el Aire";
-                    songArtistEl.innerText = "Transmisión en directo";
-                }
-            } else {
-                // Fallback simulation data if network/proxy restricts
-                listenerCountEl.innerText = "28";
-                songTitleEl.innerText = "Melodía del Alma - En Vivo";
-                songArtistEl.innerText = "Radio Magia y Poesía";
-            }
-        }
-
-        // Poll stats every 10 seconds
-        setInterval(fetchShoutcastStats, 10000);
-        fetchShoutcastStats();
+        // Start polling metadata every 8 seconds on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchShoutcastMetadata();
+            setInterval(fetchShoutcastMetadata, 8000);
+        });
     </script>
 </body>
 </html>
